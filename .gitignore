@@ -1,6 +1,6 @@
 .project
 .settings/
-
+.idea/
 # Compiled class file
 *.class
 
