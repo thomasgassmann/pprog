@@ -13,8 +13,12 @@ public class Main {
 		int[] input2 = generateRandomInput(10000);
 		int[] input3 = generateRandomInput(100000);
 		int[] input4 = generateRandomInput(1000000);
-		
+
 		// Sequential version
+		computePrimeFactorsOnMainThread(input1);
+		computePrimeFactorsOnMainThread(input2);
+		computePrimeFactorsOnMainThread(input3);
+		computePrimeFactorsOnMainThread(input4);
 		taskB(input1);
 		taskB(input2);
 		taskB(input3);
@@ -80,14 +84,54 @@ public class Main {
 		throw new UnsupportedOperationException();
 	}
 	
+	public static void computePrimeFactorsOnMainThread(final int[] values) {
+		long start = System.nanoTime();
+		
+		int[] res = computePrimeFactors(values);
+		
+		var elapsed = (System.nanoTime() - start) / 1.0e6;
+		System.out.println("Sequential Took: " + elapsed + "ms");
+	}
+	
 	public static void taskA() {
-		//TODO: implement
-		throw new UnsupportedOperationException();
+		System.out.println("Main Thread Name: " + Thread.currentThread().getName());
+		var t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("Hello Thread!");
+				System.out.println("Child Thread Name: " + Thread.currentThread().getName());
+			}
+		});
+		t.start();
+		try {
+			t.join();
+		} catch (InterruptedException e) {
+			// nothing to be expected, java has forced my hand
+			e.printStackTrace();
+		}
 	}
 	
 	public static int[] taskB(final int[] values) {
-		//TODO: implement
-		throw new UnsupportedOperationException();
+		long start = System.nanoTime();
+		var r = new Runnable() {
+			private int[] res;
+			
+			@Override
+			public void run() {
+				this.res = computePrimeFactors(values);
+			}
+		};
+		var t = new Thread(r);
+		t.start();
+		try {
+			t.join();
+			var elapsed = (System.nanoTime() - start) / 1.0e6;
+			System.out.println("Parallel Took: " + elapsed + "ms");
+			return r.res;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	// Returns overhead of creating thread in nano-seconds
