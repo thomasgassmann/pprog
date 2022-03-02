@@ -15,23 +15,53 @@ public class Main {
 		int[] input4 = generateRandomInput(1000000);
 
 		// Sequential version
-		computePrimeFactorsOnMainThread(input1);
-		computePrimeFactorsOnMainThread(input2);
-		computePrimeFactorsOnMainThread(input3);
-		computePrimeFactorsOnMainThread(input4);
-		taskB(input1);
-		taskB(input2);
-		taskB(input3);
-		taskB(input4);
+//		computePrimeFactorsOnMainThread(input1);
+//		computePrimeFactorsOnMainThread(input2);
+//		computePrimeFactorsOnMainThread(input3);
+//		computePrimeFactorsOnMainThread(input4);
+//		taskB(input1);
+//		taskB(input2);
+//		taskB(input3);
+//		taskB(input4);
+
+		long threadOverhead = taskC();
+		System.out.format("Thread overhead on current system is: %d nano-seconds\n", threadOverhead);
+		
+		taskCVariance();
 		
 		// Parallel version
 		taskE(input1, 4);
 		taskE(input2, 4);
 		taskE(input3, 4);
-		taskE(input4, 4);
+		taskE(input4, 4);	
+	}
+	
+	public static void taskCVariance() {
+		int numIterations = 1000;
+		long[] ns = new long[numIterations];
+		for (int i = 0; i < 1000; i++) {
+			ns[i] = taskC();
+		}
 		
-		long threadOverhead = taskC();
-		System.out.format("Thread overhead on current system is: %d nano-seconds\n", threadOverhead);		
+		System.out.println("Took " + average(ns) + " on average");
+		System.out.println("Variance " + variance(ns));
+	}
+	
+	private static double variance(long[] values) {
+		var mean = average(values);
+		double s = 0;
+		for (int i = 0; i < values.length; i++) {
+			s += Math.pow(values[i] - mean, 2);
+		}
+		
+		return s / values.length;
+	}
+	
+	private static double average(long[] values) {
+		long sum = 0;
+		for (int i = 0; i < values.length; i++)
+			sum += values[i];
+		return sum / values.length;
 	}
 	
 	private final static Random rnd = new Random(42);
@@ -136,8 +166,21 @@ public class Main {
 	
 	// Returns overhead of creating thread in nano-seconds
 	public static long taskC() {		
-		//TODO: implement
-		throw new UnsupportedOperationException();
+		long start = System.nanoTime();
+		
+		var t = new Thread() {
+			@Override
+			public void run() {
+			}
+		};
+		t.start();
+		try {
+			t.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		return System.nanoTime() - start;
 	}
 	
 	public static int[] taskE(final int[] values, final int numThreads) {
