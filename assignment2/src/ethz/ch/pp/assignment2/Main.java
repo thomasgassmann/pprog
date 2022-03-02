@@ -1,5 +1,6 @@
 package ethz.ch.pp.assignment2;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Main {
@@ -109,9 +110,29 @@ public class Main {
 	}
 	
 	// TaskD
-	public static ArraySplit[] PartitionData(int length, int numPartitions) {
-		//TODO: implement
-		throw new UnsupportedOperationException();
+	
+	/**
+	 * we split them evenly, but if the input was sorted, this 
+	 * might lead to bad results, since the upper values take longer 
+	 * to process
+	 * we could avoid this if we split them by mod numPartitions
+	 * but it's fine to split them evenly in this case
+	 * @param length
+	 * @param numPartitions
+	 * @return
+	 */
+	public static ArraySplit[] PartitionData(int length, int numPartitions) {		
+		ArraySplit[] res = new ArraySplit[numPartitions];
+		
+		int current = 0;
+		int size = (int)Math.round((float)length / numPartitions);
+		for (int i = 0; i < numPartitions - 1; i++) {
+			res[i] = new ArraySplit(current, size);
+			current += size;
+		}
+		
+		res[res.length - 1] = new ArraySplit(current, length - current);
+		return res;
 	}
 	
 	public static void computePrimeFactorsOnMainThread(final int[] values) {
@@ -184,8 +205,33 @@ public class Main {
 	}
 	
 	public static int[] taskE(final int[] values, final int numThreads) {
-		//TODO: implement
-		throw new UnsupportedOperationException();
+		var partitions = PartitionData(values.length, numThreads);
+		final int[] res = new int[values.length];
+		
+		var threads = new ArrayList<Thread>();
+		for (int i = 0; i < partitions.length; i++) {
+			final ArraySplit part = partitions[i];
+			var t = new Thread() {
+				@Override
+				public void run() {
+					for (int j = part.startIndex; j < part.startIndex + part.length; j++) {
+						res[j] = numPrimeFactors(values[j]);
+					}
+				}
+			};
+			t.start();
+			threads.add(t);
+		}
+		
+		for (var thread : threads) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return res;
 	}
 
 
