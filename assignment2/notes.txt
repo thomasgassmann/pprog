@@ -1,0 +1,1 @@
+F) I would expect to scale sublinearly. The larger the number of threads the bigger the overhead. So I would expect the curve to flatten sharply after more threads than processor cores (or threads) are used.
