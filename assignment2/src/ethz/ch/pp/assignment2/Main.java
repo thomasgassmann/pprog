@@ -16,14 +16,14 @@ public class Main {
 		int[] input4 = generateRandomInput(1000000);
 
 		// Sequential version
-//		computePrimeFactorsOnMainThread(input1);
-//		computePrimeFactorsOnMainThread(input2);
-//		computePrimeFactorsOnMainThread(input3);
-//		computePrimeFactorsOnMainThread(input4);
-//		taskB(input1);
-//		taskB(input2);
-//		taskB(input3);
-//		taskB(input4);
+		computePrimeFactorsOnMainThread(input1);
+		computePrimeFactorsOnMainThread(input2);
+		computePrimeFactorsOnMainThread(input3);
+		computePrimeFactorsOnMainThread(input4);
+		taskB(input1);
+		taskB(input2);
+		taskB(input3);
+		taskB(input4);
 
 		long threadOverhead = taskC();
 		System.out.format("Thread overhead on current system is: %d nano-seconds\n", threadOverhead);
