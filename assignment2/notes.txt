@@ -1,1 +1,47 @@
 F) I would expect to scale sublinearly. The larger the number of threads the bigger the overhead. So I would expect the curve to flatten sharply after more threads than processor cores (or threads) are used.
+
+G) Measurements: (8 core machine)
+Using 1 threads
+1000: Took 26.23172
+10000: Took 281.90352
+100000: Took 2587.280389
+1000000: Took 23649.76846
+Using 2 threads
+1000: Took 14.343435
+10000: Took 146.079029
+100000: Took 1640.312884
+1000000: Took 16318.701189
+Using 4 threads
+1000: Took 9.635594
+10000: Took 86.540863
+100000: Took 1052.58758
+1000000: Took 10807.512707
+Using 8 threads
+1000: Took 11.885484
+10000: Took 89.870726
+100000: Took 1005.527592
+1000000: Took 9828.024335
+Using 16 threads
+1000: Took 12.253266
+10000: Took 98.579429
+100000: Took 999.648625
+1000000: Took 9805.533787
+Using 32 threads
+1000: Took 11.559672
+10000: Took 113.092651
+100000: Took 1007.618103
+1000000: Took 9746.086309
+Using 64 threads
+1000: Took 13.8472
+10000: Took 100.693654
+100000: Took 1012.109952
+1000000: Took 9725.788495
+Using 128 threads
+1000: Took 17.621244
+10000: Took 102.099364
+100000: Took 1005.21693
+1000000: Took 9760.972608
+
+For 1000 and 10000 values, there is almost no difference.
+For 100000 and 1000000 values there is about a 2x improvement when doubling the number of threads. The improvements stop after using more than ~4 threads.
+ 

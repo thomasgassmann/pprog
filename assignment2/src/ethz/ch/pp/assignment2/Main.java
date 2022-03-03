@@ -2,18 +2,38 @@ package ethz.ch.pp.assignment2;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.function.Function;
 
 public class Main {
 
+	public static double measure(Function<Integer, int[]> fn) {
+		long start = System.nanoTime();
+		fn.apply(0);
+		
+		return (System.nanoTime() - start) / 1.0e6;
+	}
+	
 	public static void main(String[] args) {
- 		
+		
+		PartitionData(1000, 128);
+		
 		// TODOadjust appropriately for the required experiments
 		taskA();
 		
-		int[] input1 = generateRandomInput(1000);
-		int[] input2 = generateRandomInput(10000);
-		int[] input3 = generateRandomInput(100000);
-		int[] input4 = generateRandomInput(1000000);
+		final int[] input1 = generateRandomInput(1000);
+		final int[] input2 = generateRandomInput(10000);
+		final int[] input3 = generateRandomInput(100000);
+		final int[] input4 = generateRandomInput(1000000);
+		
+ 		for (int i = 1; i <= 128; i *= 2) {
+ 			final int c = i;
+ 			System.out.println("Using " + i + " threads");
+ 			System.out.println("1000: Took " + measure(a -> taskE(input1, c)));
+ 			System.out.println("10000: Took " + measure(a -> taskE(input2, c)));
+ 			System.out.println("100000: Took " + measure(a -> taskE(input3, c)));
+ 			System.out.println("1000000: Took " + measure(a -> taskE(input4, c)));
+ 		}
+		
 
 		// Sequential version
 		computePrimeFactorsOnMainThread(input1);
@@ -125,7 +145,7 @@ public class Main {
 		ArraySplit[] res = new ArraySplit[numPartitions];
 		
 		int current = 0;
-		int size = (int)Math.round((float)length / numPartitions);
+		int size = length / numPartitions;
 		for (int i = 0; i < numPartitions - 1; i++) {
 			res[i] = new ArraySplit(current, size);
 			current += size;
