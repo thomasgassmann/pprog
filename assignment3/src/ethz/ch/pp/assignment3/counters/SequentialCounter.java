@@ -2,15 +2,15 @@ package ethz.ch.pp.assignment3.counters;
 
 //TODO: implement
 public class SequentialCounter implements Counter {
+	private int _i = 0;
 	
 	@Override
 	public void increment() {
-		//TODO: implement		
+		_i++;
 	}
 
 	@Override
 	public int value() {
-		//TODO: implement
-		return 0;		
+		return _i;		
 	}
 }

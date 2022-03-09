@@ -1,0 +1,2 @@
+a) There are bad interleavings when incrementing the value. The value is simultaneously read in at least two different threads. They then both increment the value and write it back. We thus lost an increment. This is why the value is always below 400000 (or equal).
+
