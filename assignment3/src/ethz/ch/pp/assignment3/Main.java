@@ -39,7 +39,8 @@ public class Main {
 //		taskAParallel();
 //		taskB();
 //		taskD();
-		taskE();
+//		taskE();
+		taskF();
 	}
 	
 	public static void taskASequential(){
@@ -70,6 +71,21 @@ public class Main {
 		Counter counter = new AtomicCounter();
 		count(counter, 4, ThreadCounterType.NATIVE, 100000);
 		System.out.println("Counter: " + counter.value());
+	}
+	
+	public static void taskF() {
+		var start = System.nanoTime();
+		
+		Counter synchron = new SynchronizedCounter();
+		count(synchron, 4, ThreadCounterType.NATIVE, 100000);
+		
+		System.out.println("Took synchronized: " + (System.nanoTime() - start) / 1000);
+		start = System.nanoTime();
+		
+		Counter atomic = new AtomicCounter();
+		count(atomic, 4, ThreadCounterType.NATIVE, 100000);
+
+		System.out.println("Took atomic: " + (System.nanoTime() - start) / 1000);
 	}
 	
 

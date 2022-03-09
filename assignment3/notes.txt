@@ -1,3 +1,5 @@
 a) There are bad interleavings when incrementing the value. The value is simultaneously read in at least two different threads. They then both increment the value and write it back. We thus lost an increment. This is why the value is always below 400000 (or equal).
 
 c) Most of the work is being doing by one thread. THis might be because very few operations actually happen outside the lock, so once the thread exits the ciritcal section, it enters again before a context switch happens (in most cases).
+
+f) Atomic is about 3x to 4x faster on 4 threads with 100000 increments per thread. Locking is usually expensive, a lot of time is spent busy waiting.
