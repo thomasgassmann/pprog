@@ -38,8 +38,8 @@ public class Main {
 //		taskASequential();
 //		taskAParallel();
 //		taskB();
-		taskD();
-//		taskE();
+//		taskD();
+		taskE();
 	}
 	
 	public static void taskASequential(){
