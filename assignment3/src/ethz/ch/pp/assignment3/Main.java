@@ -33,9 +33,9 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		taskASequential();
-		taskAParallel();
-//		taskB();
+//		taskASequential();
+//		taskAParallel();
+		taskB();
 //		taskD();
 //		taskE();
 	}
