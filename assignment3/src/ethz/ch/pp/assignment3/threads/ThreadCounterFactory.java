@@ -9,12 +9,12 @@ public class ThreadCounterFactory {
 	    FAIR
 	}
 	
-	public static ThreadCounter make(ThreadCounterType type, Counter counter, int id, int numThreads, int numIterations) {
+	public static ThreadCounter make(ThreadCounterType type, Counter counter, int id, int numThreads, int numIterations, Turn turn) {
 		switch (type) {
 		case NATIVE:
 			return new NativeThreadCounter(counter, id, numThreads, numIterations);
 		case FAIR:
-			return new FairThreadCounter(counter, id, numThreads, numIterations);
+			return new FairThreadCounter(counter, id, numThreads, numIterations, turn);
 		default:
 			throw new UnsupportedOperationException();
 		}

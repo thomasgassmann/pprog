@@ -9,14 +9,16 @@ import ethz.ch.pp.assignment3.counters.SequentialCounter;
 import ethz.ch.pp.assignment3.counters.SynchronizedCounter;
 import ethz.ch.pp.assignment3.threads.ThreadCounterFactory;
 import ethz.ch.pp.assignment3.threads.ThreadCounterFactory.ThreadCounterType;
+import ethz.ch.pp.assignment3.threads.Turn;
 
 
 public class Main {
 
 	public static void count(final Counter counter, int numThreads, ThreadCounterType type, int numInterations) {
 		List<Thread> threads = new ArrayList<Thread>();
+		var turn = new Turn(numThreads);
 		for (int i = 0; i < numThreads; i++) {
-			threads.add(new Thread(ThreadCounterFactory.make(type, counter, i, numThreads, numInterations)));
+			threads.add(new Thread(ThreadCounterFactory.make(type, counter, i, numThreads, numInterations, turn)));
 		}
 
 		for (int i = 0; i < numThreads; i++) {
@@ -35,8 +37,8 @@ public class Main {
 	public static void main(String[] args) {
 //		taskASequential();
 //		taskAParallel();
-		taskB();
-//		taskD();
+//		taskB();
+		taskD();
 //		taskE();
 	}
 	
@@ -59,7 +61,7 @@ public class Main {
 	}
 	
 	public static void taskD(){
-		Counter counter = null; //TODO: which type of counter can we use here?
+		Counter counter = new SequentialCounter(); //TODO: which type of counter can we use here?
 		count(counter, 2, ThreadCounterType.FAIR, 100000);
 		System.out.println("Counter: " + counter.value());
 	}
