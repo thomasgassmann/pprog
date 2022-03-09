@@ -7,6 +7,7 @@ import ethz.ch.pp.assignment3.counters.AtomicCounter;
 import ethz.ch.pp.assignment3.counters.Counter;
 import ethz.ch.pp.assignment3.counters.SequentialCounter;
 import ethz.ch.pp.assignment3.counters.SynchronizedCounter;
+import ethz.ch.pp.assignment3.threads.NativeThreadCounter;
 import ethz.ch.pp.assignment3.threads.ThreadCounterFactory;
 import ethz.ch.pp.assignment3.threads.ThreadCounterFactory.ThreadCounterType;
 import ethz.ch.pp.assignment3.threads.Turn;
@@ -40,7 +41,8 @@ public class Main {
 //		taskB();
 //		taskD();
 //		taskE();
-		taskF();
+//		taskF();
+		taskG();
 	}
 	
 	public static void taskASequential(){
@@ -86,6 +88,46 @@ public class Main {
 		count(atomic, 4, ThreadCounterType.NATIVE, 100000);
 
 		System.out.println("Took atomic: " + (System.nanoTime() - start) / 1000);
+	}
+	
+	public static void taskG() {
+		final Counter counter = new AtomicCounter();
+		var observer = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {	
+					try {
+						Thread.sleep(1);
+						System.out.println("Current progress: " + counter.value());
+					} catch (InterruptedException e) {
+						return;
+					}
+				}
+			}
+		});
+		observer.start();
+
+		var numThreads = 4;
+		var threads = new ArrayList<Thread>();
+		for (int i = 0; i < numThreads; i++) {
+			threads.add(new Thread(new NativeThreadCounter(counter, i, numThreads, 100_000)));
+			threads.get(i).start();
+		}
+		
+		for (var thread : threads) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		observer.interrupt();
+		try {
+			observer.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 
