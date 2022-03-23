@@ -11,6 +11,7 @@ public class Main {
 		
 		sequential(input, Workload.Type.HEAVY);
 		
+		taskD(input, Workload.Type.HEAVY);
 		taskA(input, Workload.Type.HEAVY);
 		taskB(input, Workload.Type.HEAVY);		
 		taskC(input, Workload.Type.HEAVY);		
@@ -85,7 +86,15 @@ public class Main {
 	public static void taskD(int[] input, Workload.Type wt){
 		System.out.println("=====================================");
 		System.out.println("TaskD");
-		//TODO: implement
+		long t0 = System.currentTimeMillis();
+		for (int i = 0; i < 5; i++) {
+			var a = SearchAndCountSeq.countNoAppearances(input, wt);
+			var b = SearchAndCountThreadDivideAndConquer.countNoAppearances(input, wt, 1, 10);
+			System.out.println("a: "+ a + " b: " + b);
+		}
+		long t1 = System.currentTimeMillis();
+		System.out.println("For (inputsize=" + input.length + ",workload=" + wt + ") SearchAndCountThreadDivideAndConquer takes "
+				+ ((t1 - t0)/5) + " msec");
 	}
 
 }
