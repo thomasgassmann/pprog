@@ -4,6 +4,9 @@ public class Sequence {
 	public final int startIndex;
 	public final int endIndex;
 	
+	public int leftOffset;
+	public int rightOffset;
+	
 	public Sequence(int start, int end) {
 		startIndex = start;
 		endIndex = end;
