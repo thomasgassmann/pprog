@@ -6,6 +6,7 @@ import java.util.concurrent.RecursiveTask;
 public class LongestCommonSequenceMulti extends RecursiveTask<Sequence> {
 
     private static final long serialVersionUID = 4179716026313995745L;
+    private static final int CUTOFF = 250;
 
     private int[] _input;
     private int _from;
@@ -24,11 +25,14 @@ public class LongestCommonSequenceMulti extends RecursiveTask<Sequence> {
 
     @Override
     protected Sequence compute() {
-        if (_to - _from <= 1) {
-            boolean eq = _input[_to] == _input[_from];
-            return _to == _from
-                    ? build(_from, _to, 0, 0)
-                    : build(_from, eq ? _to : _from, eq ? 1 : 0, eq ? 1 : 0);
+        if (_to - _from <= CUTOFF) {
+        	Sequence seq = LongestCommonSequence.longestCommonSequence(_input, _from, _to - _from + 1);
+        	int rOffset = -1, lOffset = -1;
+        	for (int i = _from; i < _input.length && _input[_from] == _input[i]; i++)
+        		lOffset++;
+        	for (int i = _to; i >= 0 && _input[_to] == _input[i]; i--)
+        		rOffset--;
+        	return build(seq.startIndex, seq.endIndex, lOffset, rOffset);
         }
 
         int size = (_to - _from) / 2;
@@ -47,9 +51,10 @@ public class LongestCommonSequenceMulti extends RecursiveTask<Sequence> {
         int rOffset = rightSeq.rightOffset;
 
         Sequence combined = null;
-        if (leftSeq.endIndex + 1 == rightSeq.startIndex && _input[leftSeq.endIndex] == _input[rightSeq.startIndex]) {
+        if (leftSeq.endIndex + 1 == rightSeq.startIndex && 
+        		Math.exp(_input[leftSeq.endIndex]) == Math.exp(_input[rightSeq.startIndex])) {
             combined = new Sequence(leftSeq.startIndex, rightSeq.endIndex);
-        } else if (_input[li] == _input[ri]) {
+        } else if (Math.exp(_input[li]) == Math.exp(_input[ri])) {
             combined = new Sequence(li - leftSeq.rightOffset, ri + rightSeq.leftOffset);
         }
 
