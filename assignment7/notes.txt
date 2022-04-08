@@ -1,1 +1,4 @@
 Task 1: Thread A could pass the check in transferMoney and meanwhile Thread B could lower the balance on the bank account to be accessed by A. This might result in a negative balance on the account.
+
+Task 2: There is a lot of lock contention. The entire banking system is locked whenever there's a transaction. We could fix this by only locking the source and target account of a transaction. 
+

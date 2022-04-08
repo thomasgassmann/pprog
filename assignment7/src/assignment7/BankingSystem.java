@@ -24,7 +24,7 @@ public class BankingSystem {
 	 * @return True if Money was transferred successfully.
 	 *         False if there was not enough balance in from.
 	 */
-	public boolean transferMoney(Account from, Account to, int amount) {	
+	public synchronized boolean transferMoney(Account from, Account to, int amount) {	
 		if (from.getBalance() < amount) {
 			return false;
 		} else {
