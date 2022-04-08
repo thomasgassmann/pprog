@@ -42,7 +42,6 @@ public class BankingSystem {
 	 */
 	public int sumAccounts(List<Account> accounts) {
 		int sum = 0;
-
 		for (Account a : accounts) {
 			synchronized(a) {
 				sum += a.getBalance();
@@ -75,11 +74,9 @@ public class BankingSystem {
 		if (a.getBalance() >= 0) {
 			getAccountList().add(a);
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
-
 	}
 
 	protected List<Account> getAccountList() {
