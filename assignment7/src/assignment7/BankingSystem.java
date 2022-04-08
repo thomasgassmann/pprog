@@ -24,13 +24,33 @@ public class BankingSystem {
 	 * @return True if Money was transferred successfully.
 	 *         False if there was not enough balance in from.
 	 */
-	public synchronized boolean transferMoney(Account from, Account to, int amount) {	
-		if (from.getBalance() < amount) {
-			return false;
-		} else {
-			from.setBalance(from.getBalance() - amount);
-			to.setBalance(to.getBalance() + amount);
+	public boolean transferMoney(Account from, Account to, int amount) {
+		try {
+			from.getLock().lock();
+			if (from.getBalance() < amount) {
+				return false;
+			} 
+		} finally {
+			from.getLock().unlock();
 		}
+		
+		// lock smaller account id first
+		try {
+			if (from.getId() > to.getId()) {
+				to.getLock().lock();
+				from.getLock().lock();
+			} else {
+				from.getLock().lock();
+				to.getLock().lock();
+			}
+			
+			to.setBalance(to.getBalance() + amount);
+			from.setBalance(from.getBalance() - amount);
+		} finally {
+			from.getLock().unlock();
+			to.getLock().unlock();
+		}
+
 		//System.out.println(from.getId());
 		return true;
 	}

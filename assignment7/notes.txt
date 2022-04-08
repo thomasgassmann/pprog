@@ -2,3 +2,7 @@ Task 1: Thread A could pass the check in transferMoney and meanwhile Thread B co
 
 Task 2: There is a lot of lock contention. The entire banking system is locked whenever there's a transaction. We could fix this by only locking the source and target account of a transaction. 
 
+Task 3: 
+Question 1: Locks are reentrant, thus we can safely "lock" it twice.
+Question 2: Deadlocks are not an issue, because we lock the bank accounts according to their ID order. We always lock the account with the smaller id first, thus there cannot be a situation where we have a transaction from A to B in one thread and one from B to A in another thread, where thread 1 has locked A and thread 2 has locked B.
+
