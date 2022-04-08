@@ -6,3 +6,8 @@ Task 3:
 Question 1: Locks are reentrant, thus we can safely "lock" it twice.
 Question 2: Deadlocks are not an issue, because we lock the bank accounts according to their ID order. We always lock the account with the smaller id first, thus there cannot be a situation where we have a transaction from A to B in one thread and one from B to A in another thread, where thread 1 has locked A and thread 2 has locked B.
 
+Task 4:
+Question 3: Assume we are summing accounts A, B and C. If we have summed up A and B already and then a transaction from C to A or C to B is executed, we will miss the value of that transaction.
+Question 4: We can again lock the accounts according to their ID. We have to keep the account locked while summing up so we can prevent transactions happening on accounts we have already summed. 
+Question 5: We have to lock the accounts in increasing order of their ID, otherwise there might be a deadlock when executing a transaction. We thus cannot parallelize the summation itself easily. 
+

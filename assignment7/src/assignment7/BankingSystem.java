@@ -1,6 +1,7 @@
 package assignment7;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class BankingSystem {
@@ -51,7 +52,6 @@ public class BankingSystem {
 			to.getLock().unlock();
 		}
 
-		//System.out.println(from.getId());
 		return true;
 	}
 
@@ -62,13 +62,26 @@ public class BankingSystem {
 	 */
 	public int sumAccounts(List<Account> accounts) {
 		int sum = 0;
-		for (Account a : accounts) {
-			synchronized(a) {
+		var sortedList = new ArrayList<>(accounts);
+		sortedList.sort(new Comparator<Account>() {
+			@Override
+			public int compare(Account o1, Account o2) {
+				return o1.getId() - o2.getId();
+			}
+		});
+		
+		try {
+			for (Account a : sortedList) {
+				a.getLock().lock();
 				sum += a.getBalance();
 			}
+		} finally {
+			for (Account a : sortedList) {
+				a.getLock().unlock();
+			}
 		}
-
-		return sum;		
+		
+		return sum;
 	}
 
 	/**
