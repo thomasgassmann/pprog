@@ -30,7 +30,7 @@ public class Diner {
 			}
 
 			// If loved one is still hungry, insist upon passing the spoon.
-			if (spouse.isHungry()) {
+			if (spouse.isHungry() && !(spouse.isHungry() && this.isHungry())) {
 				System.out.printf("%s: You go first dear %s!%n", name, spouse.getName());
 				spoon.setOwner(spouse);
 				continue;
