@@ -1,0 +1,8 @@
+a) Updating the state cannot be done in a single operation, because the recurrence itself consists of multiple operations that cannot be mapped to aotmic CPU instructions by the JVM.
+
+b) With atomics we don't have any lock contention. But instead, it is often the case that comapreAndSet fails because the value ahs changed in between. With more threads this gets worse. Since monitor locks are built-in into the JRE and we have no loops in the locked impl, the locked impl might be faster than the atomic impl.
+
+c) Optimistic concurrency is viable if contention is quite low and the overhead of locks is large. This is not the case here.
+
+d) We could use getAndUpdate and provide a function, but this did not improve the performance.
+
