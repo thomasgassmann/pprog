@@ -14,5 +14,6 @@ stages:
 
 runScripts:
   stage: test
-  image: registry.inf.ethz.ch/course-pprog21/test_image:v0.1
+  #image: registry.inf.ethz.ch/course-pprog21/test_image:v0.1
+  image: registry.inf.ethz.ch/course-pprog22/unit_test
   script: /bin/bash /runAllUnittestsScript.sh $CI_PROJECT_DIR
