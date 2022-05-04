@@ -17,7 +17,9 @@ public class BakeryLock implements Lock {
     public void acquire(int me) {
         _flag.set(me, 1);
         _label.set(me, maxLabel() + 1);
-        while (conflict(me));
+        while (conflict(me)) {
+        	Thread.yield();
+        }
     }
 
     @Override
