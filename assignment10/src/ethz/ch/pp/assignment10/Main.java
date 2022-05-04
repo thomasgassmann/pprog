@@ -2,27 +2,44 @@ package ethz.ch.pp.assignment10;
 
 import org.junit.Assert;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+
 public class Main {
 
 	public static void main(String[] args) {
  		System.out.println("Assignment 10");
  		
- 		for (int i = 2; i <= 10; i++) {
+ 		PrintWriter writer;
+ 		try {
+			writer = new PrintWriter("./res.csv");
+		} catch (FileNotFoundException e) {
+			return;
+		}
+ 		
+ 		writer.println("iterations;threads;bakery;tas;tasbackoff");
+ 		for (int i = 2; i <= 15; i++) {
  			BakeryLock bakeryLock = new BakeryLock(i);
  			TASLock tasLock = new TASLock();
  			TASBackoffLock tasBackoffLock = new TASBackoffLock();
  			
- 			for (int j = 500; j <= 50000; j *= 10) {
+ 			for (int j = 500; j <= 500000; j *= 10) {
  				System.out.println("============================");
  				System.out.println("Checking with " + i + " threads and " + j + " iterations");
- 				time(bakeryLock, i, j, "Bakery Lock");
- 				time(tasLock, i, j, "TASLock");
- 				time(tasBackoffLock, i, j, "TASLock (backoff)");
+ 				for (int k = 0; k < 3; k++) {
+	 				long bakeryTime = time(bakeryLock, i, j, "Bakery Lock");
+	 				long tasTime = time(tasLock, i, j, "TASLock");
+	 				long tasBackoffTime = time(tasBackoffLock, i, j, "TASLock (backoff)");
+	 				writer.println(j + ";" + i + ";" + bakeryTime + ";" + tasTime + ";" + tasBackoffTime);
+ 				}
  			}
  		}
+ 		
+ 		writer.flush();
+ 		writer.close();
 	}
 	
-	public static void time(final Lock lock, int threadCount, int iterations, String name) {
+	public static long time(final Lock lock, int threadCount, int iterations, String name) {
 		Counter counter = new Counter();
 
 		long start = System.nanoTime();
@@ -32,6 +49,7 @@ public class Main {
 		assert counter.i == threadCount * iterations;
 			
 		System.out.println("Took " + total + "ms for lock " + name);
+		return total;
 	}
 	
 	private static class Container {
