@@ -1,4 +1,4 @@
-<project name="Exercise X" default="dist" basedir=".">
+<project name="Exercise 10" default="dist" basedir=".">
   <description>
       Builds skeleton for Exercise.
   </description>
