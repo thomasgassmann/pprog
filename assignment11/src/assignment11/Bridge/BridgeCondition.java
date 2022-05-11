@@ -10,23 +10,56 @@ public class BridgeCondition extends Bridge {
 	//TODO use this given lock and create conditions form it
 	//you might find that you need some additional variables
 	final Lock bridgeLock = new ReentrantLock();
+	private volatile int numCars = 0;
+	private volatile int numTrucks = 0;
+	final Condition carLeave = bridgeLock.newCondition();
+	final Condition truckLeave = bridgeLock.newCondition();
 
 	public void enterCar() throws InterruptedException {
-		bridgeLock.lock();
 		//TODO implement rules for car entry
+		bridgeLock.lock();
+		while (numCars >= 3 || numTrucks > 0) {
+			if (numCars >= 3) {
+				carLeave.await();
+			} else {
+				truckLeave.await();
+			}
+		}
+		
+		numCars++;
 		bridgeLock.unlock();
 	}
 
 	public void leaveCar() {
 		//TODO implement rules for car leave
+		bridgeLock.lock();
+		numCars--;
+		carLeave.signalAll();
+		
+		bridgeLock.unlock();
 	}
 
 	public void enterTruck() throws InterruptedException {
 		//TODO implement rules for truck entry - similar to car entry
+		bridgeLock.lock();
+		while (numCars > 0 || numTrucks > 0) {
+			if (numCars > 0) {
+				carLeave.await();
+			} else {
+				truckLeave.await();
+			}
+		}
+		
+		numTrucks++;
+		bridgeLock.unlock();
 	}
 
 	public void leaveTruck() {
 		//TODO implement rules for car leave - similar to car leave
+		bridgeLock.lock();
+		numTrucks--;
+		truckLeave.signalAll();
+		bridgeLock.unlock();
 	}
 
 	public static void main(String[] args) {

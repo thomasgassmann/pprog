@@ -6,14 +6,22 @@ public class MySemaphore {
 
 	public MySemaphore(int maxCount) {
 		//TODO initialize count suitably
+		count = maxCount;
 	}
 
-	public void acquire() throws InterruptedException {
+	public synchronized void acquire() throws InterruptedException {
 		//TODO implment suitable monitor and implement semaphore acquisition
+		while (count == 0) {
+			wait();
+		}
+		
+		count--;
 	}
 
-	public void release() {
+	public synchronized void release() {
 		//TODO implment suitable monitor and implement semaphore release
+		count++;
+		notify();
 	}
 
 }
