@@ -1,0 +1,3 @@
+a) Our lock free algorithm is not wait-free. It is still possible for one thread to starve. Since the workload is bounded, a thread makes progress eventually. If it were unbounded, it would not be wait-free.
+
+b) We can in theory use the same mechanism. In a tree, we need to consider more cases though, e.g. what happens to child nodes. The current solution should still work well though if the number of writers is comparatively small.
