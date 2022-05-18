@@ -18,48 +18,59 @@ public class BridgeCondition extends Bridge {
 	public void enterCar() throws InterruptedException {
 		//TODO implement rules for car entry
 		bridgeLock.lock();
-		while (numCars >= 3 || numTrucks > 0) {
-			if (numCars >= 3) {
-				carLeave.await();
-			} else {
-				truckLeave.await();
+		try {
+			while (numCars >= 3 || numTrucks > 0) {
+				if (numCars >= 3) {
+					carLeave.await();
+				} else {
+					truckLeave.await();
+				}
 			}
+			
+			numCars++;
+		} finally {
+			bridgeLock.unlock();
 		}
-		
-		numCars++;
-		bridgeLock.unlock();
 	}
 
 	public void leaveCar() {
 		//TODO implement rules for car leave
 		bridgeLock.lock();
-		numCars--;
-		carLeave.signalAll();
-		
-		bridgeLock.unlock();
+		try {
+			numCars--;
+			carLeave.signalAll();
+		} finally {
+			bridgeLock.unlock();
+		}
 	}
 
 	public void enterTruck() throws InterruptedException {
 		//TODO implement rules for truck entry - similar to car entry
 		bridgeLock.lock();
-		while (numCars > 0 || numTrucks > 0) {
-			if (numCars > 0) {
-				carLeave.await();
-			} else {
-				truckLeave.await();
+		try {
+			while (numCars > 0 || numTrucks > 0) {
+				if (numCars > 0) {
+					carLeave.await();
+				} else {
+					truckLeave.await();
+				}
 			}
+			
+			numTrucks++;
+		} finally {
+			bridgeLock.unlock();
 		}
-		
-		numTrucks++;
-		bridgeLock.unlock();
 	}
 
 	public void leaveTruck() {
 		//TODO implement rules for car leave - similar to car leave
 		bridgeLock.lock();
-		numTrucks--;
-		truckLeave.signalAll();
-		bridgeLock.unlock();
+		try {
+			numTrucks--;
+			truckLeave.signalAll();
+		} finally {
+			bridgeLock.unlock();
+		}
 	}
 
 	public static void main(String[] args) {
